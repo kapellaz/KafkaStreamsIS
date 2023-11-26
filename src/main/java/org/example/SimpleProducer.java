@@ -49,8 +49,7 @@ public class SimpleProducer {
 
         Producer<String, Long> producer = new KafkaProducer<>(props);
 
-        for(int i = 0; i < 1000; i++)
-            producer.send(new ProducerRecord<String, Long>(topicName, Integer.toString(i), (long) i));
+        producer.send(new ProducerRecord<String, Long>(topicName, "buy", (long) 3));
 
         System.out.println("Message sent successfully to topic " + topicName);
         producer.close();

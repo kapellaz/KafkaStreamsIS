@@ -28,6 +28,8 @@ public class KafkaConsumer {
         KTable<String, Long> outlines = lines.
                 groupByKey().count();
         outlines.toStream().to(outtopicname);
+        
+        System.out.println(outlines.toStream());
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();

@@ -11,16 +11,16 @@ import org.example.Serializer.CustomSaleSerializer;
 import org.example.Serializer.Sale;
 
 
-public class Stream1 {
+public class Stream4 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
         String topicName = "testBuy1";
-        String outtopicname = "req5";
+        String outtopicname = "req8";
 
         java.util.Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application1");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application4");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
-        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Integer().getClass());
+        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
 
         StreamsBuilder builder = new StreamsBuilder();
@@ -28,16 +28,16 @@ public class Stream1 {
                 Serdes.String(),
                 new CustomSaleSerializer()
         ));
-        //get renenue per sock pair group the buy ID
-        KTable<Integer, Double> out = lines
-                .groupBy((key, value) -> value.getId())
+        //get total revenue
+        KTable<String, Double> out = lines
+                .groupByKey()
                 .aggregate(
                         () -> 0.0,
                         (aggKey, newValue, aggValue) -> aggValue + (newValue.getPricePerPair() * newValue.getQuantity()),
-                        Materialized.with(Serdes.Integer(), Serdes.Double())
+                        Materialized.with(Serdes.String(), Serdes.Double())
                 );
 
-        out.toStream().to(outtopicname, Produced.with(Serdes.Integer(), Serdes.Double()));
+        out.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
 
         //print the result and the latest results
         out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Revenue: " + value));

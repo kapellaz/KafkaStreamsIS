@@ -11,14 +11,14 @@ import org.example.Serializer.CustomSaleSerializer;
 import org.example.Serializer.Sale;
 
 
-public class Stream1 {
+public class Stream2 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        String topicName = "testBuy1";
-        String outtopicname = "req5";
+        String topicName = "Sell";
+        String outtopicname = "req6";
 
-        java.util.Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application1");
+        Properties props = new Properties();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application2");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Integer().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
@@ -28,7 +28,7 @@ public class Stream1 {
                 Serdes.String(),
                 new CustomSaleSerializer()
         ));
-        //get renenue per sock pair group the buy ID
+        //get the revenue of one pair of socks
         KTable<Integer, Double> out = lines
                 .groupBy((key, value) -> value.getId())
                 .aggregate(
@@ -39,8 +39,8 @@ public class Stream1 {
 
         out.toStream().to(outtopicname, Produced.with(Serdes.Integer(), Serdes.Double()));
 
-        //print the result and the latest results
-        out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Revenue: " + value));
+        //print the result
+        out.toStream().foreach((key, value) -> System.out.println("Sell: " + key + " Revenue: " + value));
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();
@@ -50,3 +50,4 @@ public class Stream1 {
 
     }
 }
+

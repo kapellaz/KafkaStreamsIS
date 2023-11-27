@@ -2,6 +2,7 @@ package org.example.Serializer;
 
 
 public class Sale {
+    private int ID;
     private String type;
     private double pricePerPair;
     private int quantity;
@@ -10,7 +11,8 @@ public class Sale {
     //empty constructor
     public Sale() {
     }
-    public Sale(String type, double pricePerPair, int quantity, String supplierIdentifier) {
+    public Sale(int ID, String type, double pricePerPair, int quantity, String supplierIdentifier) {
+        this.ID = ID;
         this.type = type;
         this.pricePerPair = pricePerPair;
         this.quantity = quantity;
@@ -33,7 +35,13 @@ public class Sale {
         return supplierIdentifier;
     }
 
+    public Integer getId() {
+        return ID;
+    }
     //setters
+    public void setId(int ID) {
+        this.ID = ID;
+    }
 
     public void setType(String type) {
         this.type = type;
@@ -52,14 +60,16 @@ public class Sale {
     }
 
     //toString
-
     @Override
     public String toString() {
         return "Sale{" +
+                "ID=" + ID +
+                ", " +
                 "type='" + type + '\'' +
                 ", pricePerPair=" + pricePerPair +
                 ", quantity=" + quantity +
                 ", supplierIdentifier='" + supplierIdentifier + '\'' +
                 '}';
     }
+
 }

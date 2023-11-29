@@ -13,14 +13,14 @@ import org.example.Serializer.CustomSaleSerializer;
 import org.example.Serializer.Sale;
 
 
-public class Stream7 {
+public class Stream8 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
         String topicName = "testBuy1";
-        String outtopicname = "req11";
+        String outtopicname = "req12";
 
         Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application1000001");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application8");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
@@ -32,7 +32,7 @@ public class Stream7 {
         ));
         //Get the average amount spent in each purchase (separated by sock type)
         KTable<String, AggregateSale> out = lines
-                .groupBy((key, value) -> value.getType())
+                .groupByKey()
                 .aggregate(
                         AggregateSale::new,
                         (aggKey, newValue, aggregate) ->{
@@ -50,7 +50,8 @@ public class Stream7 {
 
         //print the result
         out2.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Average: " + value));
-
+        out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Average: " + value));
+        
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();
 

@@ -38,7 +38,6 @@ public class Stream1 {
                 );
 
         out.toStream().to(outtopicname, Produced.with(Serdes.Integer(), Serdes.Double()));
-
         //print the result and the latest results
         out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Revenue: " + value));
 

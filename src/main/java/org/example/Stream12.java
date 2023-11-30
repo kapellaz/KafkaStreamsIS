@@ -13,7 +13,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.example.Serializer.CustomSaleSerializer;
 import org.example.Serializer.Sale;
 
-public class Stream11 {
+public class Stream12 {
         public static void main(String[] args) {
                 BasicConfigurator.configure();
                 String topicName = "Sell";

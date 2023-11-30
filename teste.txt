@@ -1,0 +1,21 @@
+{
+  "schema": {
+    "type": "struct",
+    "fields": [
+      {"type": "int", "optional": false, "field": "id"},
+      {"type": "string", "optional": false, "field": "type"},
+      {"type": "double", "optional": false, "field": "pricePerPair"},
+      {"type": "int", "optional": false, "field": "quantity"},
+      {"type": "string", "optional": false, "field": "supplierIdentifier"}
+    ],
+    "optional": false,
+    "name": "buyData"
+  },
+  "payload": {
+    "id": 8,
+    "type": "abcd",
+    "pricePerPair": 20.0,
+    "quantity": 1,
+    "supplierIdentifier": "Supplier1"
+  }
+}

@@ -15,11 +15,11 @@ import org.apache.kafka.streams.kstream.Grouped;
 public class Stream9 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        String topicName = "testBuy1";
+        String topicName = "Buy";
         String outtopicname = "req13";
 
         Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application10004");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application9");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
@@ -72,5 +72,9 @@ public class Stream9 {
         System.out.println("Reading stream from topic " + topicName);
 
     }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> 42f283b7516901d8a00372bebcabae50eb6baa75

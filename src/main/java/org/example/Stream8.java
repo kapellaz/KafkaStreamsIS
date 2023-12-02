@@ -16,7 +16,7 @@ import org.example.Serializer.Sale;
 public class Stream8 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        String topicName = "testBuy1";
+        String topicName = "Buy";
         String outtopicname = "req12";
 
         Properties props = new Properties();
@@ -59,5 +59,9 @@ public class Stream8 {
         System.out.println("Reading stream from topic " + topicName);
 
     }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> 42f283b7516901d8a00372bebcabae50eb6baa75

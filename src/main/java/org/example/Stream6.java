@@ -14,7 +14,7 @@ import org.example.Serializer.Sale;
 public class Stream6 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        String topicName = "testBuy1";
+        String topicName = "Buy";
         String outtopicname = "req10";
 
         Properties props = new Properties();

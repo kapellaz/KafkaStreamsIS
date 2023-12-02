@@ -59,9 +59,5 @@ public class Stream8 {
         System.out.println("Reading stream from topic " + topicName);
 
     }
-<<<<<<< HEAD
 }
 
-=======
-}
->>>>>>> 42f283b7516901d8a00372bebcabae50eb6baa75

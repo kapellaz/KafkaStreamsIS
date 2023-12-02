@@ -7,18 +7,20 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
+import org.example.Serializer.AggregateSale;
+import org.example.Serializer.AggregateSaleSerde;
 import org.example.Serializer.CustomSaleSerializer;
 import org.example.Serializer.Sale;
 
 
-public class Stream4 {
+public class Stream8 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
         String topicName = "Buy";
-        String outtopicname = "req8";
+        String outtopicname = "req12";
 
-        java.util.Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application4");
+        Properties props = new Properties();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application8");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
@@ -28,20 +30,28 @@ public class Stream4 {
                 Serdes.String(),
                 new CustomSaleSerializer()
         ));
-        //get total revenue
-        KTable<String, Double> out = lines
+        //Get the average amount spent in each purchase (separated by sock type)
+        KTable<String, AggregateSale> out = lines
                 .groupByKey()
                 .aggregate(
-                        () -> 0.0,
-                        (aggKey, newValue, aggValue) -> aggValue + (newValue.getPricePerPair() * newValue.getQuantity()),
-                        Materialized.with(Serdes.String(), Serdes.Double())
+                        AggregateSale::new,
+                        (aggKey, newValue, aggregate) ->{
+                            aggregate.addAmount(newValue.getPricePerPair() * newValue.getQuantity());
+                            aggregate.incrementCount();
+                            return aggregate;
+                        },
+
+                        Materialized.with(Serdes.String(), new AggregateSaleSerde())
                 );
 
-        out.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
+        KTable<String, Double> out2 = out.mapValues(AggregateSale::Average);
 
-        //print the result and the latest results
-        out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Revenue: " + value));
+        out2.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
 
+        //print the result
+        out2.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Average: " + value));
+        out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Average: " + value));
+        
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();
 

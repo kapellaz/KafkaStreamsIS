@@ -1,0 +1,22 @@
+{
+    "name":"postgres-source",
+    "config":{
+        "connector.class":"io.confluent.connect.jdbc.JdbcSourceConnector",
+        "connection.url":"jdbc:postgresql://database:5432/project3",
+        "connection.user":"postgres",
+        "connection.password":"nopass",
+        "dialect.name":"PostgreSqlDatabaseDialect",
+        "mode":"bulk",
+        "query":"SELECT * from socks;",
+        "poll.interval.ms":"60000",
+        "topic.prefix":"dbToTopic",
+        "bootstrap.servers":"broker1:9092",
+        "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+        "value.converter":"org.apache.kafka.connect.json.JsonConverter",
+        "key.converter.schemas.enable":"true",
+        "value.converter.schemas.enable":"true",
+        "offset.storage.file.filename":"/tmp/connect.offsets",
+        "offset.flush.interval.ms":"10000",
+        "plugin.path":"/kafka_2.13-3.6.0/libs"
+    }
+}

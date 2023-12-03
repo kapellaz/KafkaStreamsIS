@@ -1,0 +1,15 @@
+curl -X DELETE http://localhost:8083/connectors/postgres-sink
+
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" http://connect:8083/connectors -d @sink.json
+
+{"schema":{"type":"struct","fields":[{"type":"string","optional":false,"field":"id"},{"type":"double","optional":false,"field":"revenue"},{"type":"double","optional":false,"field":"expenses"},{"type":"double","optional":false,"field":"profit"}],"optional":false,"name":"total data"},"payload":{"id": "2", "revenue":988500.0, "expenses":731430.0,"profit":257070.0}}
+
+
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" http://connect:8083/connectors -d @source.json
+
+kafka-console-producer.sh --broker-list broker1:9092 --topic Buy --property "parse.key=true" --property "key.separator=:"
+
+kafka-console-producer.sh --broker-list broker1:9092 --topic Sell --property "parse.key=true" --property "key.separator=:"
+
+
+Buy:{"id":8,"type":"abcd","pricePerPair":20.0,"quantity":2,"supplierIdentifier":"Supplier1"}

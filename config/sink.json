@@ -5,8 +5,8 @@
         "connector.class":"io.confluent.connect.jdbc.JdbcSinkConnector",
         "dialect.name":"PostgreSqlDatabaseDialect",
         "tasks.max":"1",
-        "topics": "new7",
-        "table.name.format": "new7",
+        "topics": "testout",
+        "table.name.format": "req1",
         "auto.create": "true",
         "auto.evolve": "true",
         "insert.mode": "upsert",
@@ -16,6 +16,8 @@
         "value.converter":"org.apache.kafka.connect.json.JsonConverter",
         "key.converter.schemas.enable":"true",
         "value.converter.schemas.enable":"true",
+        "bootstrap.servers":"broker1:9092",
+        "errors.tolerance":"all",
         "plugin.path":"/kafka_2.13-3.6.0/libs"
     }
 }

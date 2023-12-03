@@ -12,14 +12,14 @@ import org.example.Serializer.CustomSaleSerializer;
 import org.example.Serializer.Sale;
 
 
-public class All {
+public class All5_6_7 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        String topicName1 = "testBuy4";
-        String topicName2 = "testSell4";
+        String topicName1 = "Buy";
+        String topicName2 = "Sell";
 
         java.util.Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "fuckkkk");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application0");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Integer().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class.getName());
@@ -57,11 +57,25 @@ public class All {
                         Materialized.with(Serdes.Integer(), Serdes.Double())
                 );
 
-        out1.toStream().to("req6", Produced.with(Serdes.Integer(), Serdes.Double()));
+        //out1.toStream().to("req6", Produced.with(Serdes.Integer(), Serdes.Double()));
+        out1.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"int32\",\"optional\":false,\"field\":\"id\"}," +
+        "{\"type\":\"int32\",\"optional\":false,\"field\":\"revenue\"}" +
+        "],\"optional\":false}," +
+        "\"payload\":{\"id\":"+k+",\"Expenses\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("testout", Produced.with(Serdes.Integer(), Serdes.String()));
+
         out1.toStream().foreach((key, value) -> System.out.println("Sell: " + key + " expenses: " + value));
 
         //req7 get profit per sock
         // Calculate profit per sock by joining revenue and expenses
+        KTable<Integer, Double> profitPerSock = out
+                .join(out1, (revenueValue, expenseValue) -> revenueValue - expenseValue);
+
+
+        profitPerSock.toStream().to("req7", Produced.with(Serdes.Integer(), Serdes.Double()));
+        profitPerSock.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Profit: " + value));
+
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();

@@ -5,9 +5,9 @@ public class Sale_Operation {
     private int ID;
     private String type;
     private String Operation;
-    private double pricePerPair;
+    private int pricePerPair;
     private int quantity;
-    private int supplierIdentifier;
+    private String supplierIdentifier;
 
     private int socktypeid;
     //empty constructor
@@ -15,7 +15,7 @@ public class Sale_Operation {
     }
 
 
-    public Sale_Operation(int ID, String type, double pricePerPair, int quantity, int supplierIdentifier, String Operation, int socktypeid) {
+    public Sale_Operation(int ID, String type, int pricePerPair, int quantity, String supplierIdentifier, String Operation, int socktypeid) {
         this.ID = ID;
         this.type = type;
         this.pricePerPair = pricePerPair;
@@ -35,7 +35,7 @@ public class Sale_Operation {
         return type;
     }
 
-    public double getPricePerPair() {
+    public int getPricePerPair() {
         return pricePerPair;
     }
 
@@ -43,7 +43,7 @@ public class Sale_Operation {
         return quantity;
     }
 
-    public int getSupplierIdentifier() {
+    public String getSupplierIdentifier() {
         return supplierIdentifier;
     }
 
@@ -65,7 +65,7 @@ public class Sale_Operation {
         this.type = type;
     }
 
-    public void setPricePerPair(double pricePerPair) {
+    public void setPricePerPair(int pricePerPair) {
         this.pricePerPair = pricePerPair;
     }
 
@@ -73,7 +73,7 @@ public class Sale_Operation {
         this.quantity = quantity;
     }
 
-    public void setSupplierIdentifier(int supplierIdentifier) {
+    public void setSupplierIdentifier(String supplierIdentifier) {
         this.supplierIdentifier = supplierIdentifier;
     }
 

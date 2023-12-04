@@ -34,7 +34,7 @@ public class KafkaConsumerDB {
         BasicConfigurator.configure();
         String topicName = "dbToTopic";
         Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "testapp56");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "testapp61");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
@@ -58,7 +58,7 @@ public class KafkaConsumerDB {
                 String operation = payloadNode.get("operation").asText();
                 int socktypeid = payloadNode.get("socktypeid").asInt();
                 int sockPrice = payloadNode.get("sockprice").asInt();
-                int sockSupplierId = payloadNode.get("socksupplierid").asInt();
+                String sockSupplierId = Integer.toString(payloadNode.get("socksupplierid").asInt());
                 int quantity = payloadNode.get("quantity").asInt();
 
                 System.out.println("====================================");
@@ -125,7 +125,7 @@ public class KafkaConsumerDB {
                 Producer<String,String> producer = new KafkaProducer<>(props);
                 for (Map.Entry<String, Sale_Operation> entry : topicHash.entrySet()) {
                     Sale_Operation v = entry.getValue();
-                    String a = "{type"+":"+"\""+v.getType()+"\""+":"+"pricePerPair"+":"+v.getPricePerPair()+":"+"quantity"+":"+"\""+v.getQuantity()+"\""+"supplierIdentifier"+"\""+v.getSupplierIdentifier()+"\"}";
+                    String a = "{\"type\""+":"+"\""+v.getType()+"\""+","+"\"pricePerPair\""+":"+v.getPricePerPair()+","+"\"quantity\""+":"+v.getQuantity()+",\"supplierIdentifier\""+":"+"\""+v.getSupplierIdentifier()+"\"}";
                     System.out.println(a);
                     producer.send(new ProducerRecord<String,String>("buyteste1",v.getOperation(),a));
                 }

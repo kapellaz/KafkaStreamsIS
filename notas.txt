@@ -13,3 +13,12 @@ kafka-console-producer.sh --broker-list broker1:9092 --topic Sell --property "pa
 
 
 Buy:{"id":8,"type":"abcd","pricePerPair":20.0,"quantity":2,"supplierIdentifier":"Supplier1"}
+
+
+{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"double","optional":false,"field":"expenses"}]},"payload":{"id":8,"expenses":1740.0}}
+
+
+
+Sell:{"id":7,"type":"abc","pricePerPair":20.0,"quantity":2,"supplierIdentifier":"Supplier1"}
+
+Buy:{"id":8,"type":"abc","pricePerPair":20.0,"quantity":2,"supplierIdentifier":"Supplier1"}

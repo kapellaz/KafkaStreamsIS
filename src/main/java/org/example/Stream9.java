@@ -1,5 +1,7 @@
 package org.example;
+import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.log4j.BasicConfigurator;
 import java.util.Properties;
 
@@ -10,13 +12,12 @@ import org.apache.kafka.streams.StreamsConfig;
 
 import org.example.Serializer.CustomSaleSerializer;
 import org.example.Serializer.Sale;
-import org.apache.kafka.streams.kstream.Grouped;
 
 public class Stream9 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        String topicName = "Buy";
-        String outtopicname = "req13";
+        String topicName1 = "Buy";
+        String topicName2 = "Sell";
 
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application9");
@@ -25,51 +26,64 @@ public class Stream9 {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
 
         StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, Sale> lines = builder.stream(topicName, Consumed.with(
+        KStream<String, Sale> lines = builder.stream(topicName1, Consumed.with(
                 Serdes.String(),
                 new CustomSaleSerializer()
         ));
 
+        KStream<String, Sale> lines1 = builder.stream(topicName2, Consumed.with(
+                Serdes.String(), new CustomSaleSerializer()
+        ));
         lines.foreach((key,value)-> System.out.println("key: "+key+" Value: "+value));
 
         //Get the sock type with the highest profit of all.
+        //Get revenue per sock type
         KTable<String, Double> out = lines
                 .groupBy((key, value) -> value.getType())
                 .aggregate(
                         () -> 0.0,
-                        (aggKey, newValue, aggValue) -> aggValue + (newValue.getPricePerPair() * (0.5) * newValue.getQuantity()),
+                        (aggKey, newValue, aggValue) -> aggValue + (newValue.getPricePerPair() * newValue.getQuantity()),
                         Materialized.with(Serdes.String(), Serdes.Double())
-                )
-                .toStream()
+                );
+
+        //Get the expenses per socktype
+        KTable<String, Double> out1 = lines1
+        .groupBy((key, value) -> value.getType())
+        .aggregate(
+                () -> 0.0,
+                (aggKey, newValue, aggValue) -> aggValue + (newValue.getPricePerPair() * newValue.getQuantity()),
+                Materialized.with(Serdes.String(), Serdes.Double())
+        );
+
+        //profit per sock type
+        KTable<String, Double> profitPerSock = out
+                .join(out1, (revenueValue, expenseValue) -> revenueValue - expenseValue);
+
+        profitPerSock.toStream().foreach((key, value) -> System.out.println(key+" Profit: " + value));
+
+        //Get the sock type with the highest profit of all.
+        KTable<String, Double> maxProfitTable = profitPerSock.toStream()
                 .groupByKey(Grouped.with(Serdes.String(), Serdes.Double()))
-                .reduce((aggValue, newValue) -> (Double.compare(aggValue, newValue) > 0) ? aggValue : newValue)
-                ;
-
+                .reduce((aggValue, newValue) -> (Double.compare(aggValue, newValue) > 0) ? aggValue : newValue);
  
-/*
-        KTable<String, Double> out = lines.map((key,value)->{
-                Double profit = value.getPricePerPair() * (0.5) * value.getQuantity();
-                String tipo = value.getType();
-                return new KeyValue<>(tipo, profit);
-        }
-        )
-        .groupByKey(Grouped.with(Serdes.String(), Serdes.Double()))
-        .reduce((a, b) -> Double.compare(a, b) > 0 ? a : b);
+       // out.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
+        
+        maxProfitTable.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"},"+
+        "{\"type\":\"string\",\"optional\":false,\"field\":\"sockType\"},"+
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"HighestProfitType\"}" +
+        "]}," +
+        "\"payload\":{\"id\":\"SockType:\",\"sockType\":\""+k+"\",\"HighestProfitType\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ13", Produced.with(Serdes.String(), Serdes.String()));
 
-        out.toStream().peek((key,value)->{
-                String output = "4. Max ==== profit: " + key + " maximum: " + value;
-                System.out.println(output);
-        })
-        .to(outtopicname);
- */
-        out.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
+        
         //print the result
-        out.toStream().foreach((key, value) -> System.out.println("Sock: "+ key + " Total Profit: " +value));
+        maxProfitTable.toStream().foreach((key, value) -> System.out.println("Sock: "+ key + " Total Profit: " +value));
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();
 
 
-        System.out.println("Reading stream from topic " + topicName);
+        System.out.println("Reading stream from topic ");
 
     }
 }

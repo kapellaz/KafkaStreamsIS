@@ -45,7 +45,13 @@ public class All8_9_10 {
                         Materialized.with(Serdes.String(), Serdes.Double())
                 );
 
-        out.toStream().to("req8", Produced.with(Serdes.String(), Serdes.Double()));
+        //out.toStream().to("req8", Produced.with(Serdes.String(), Serdes.Double()));
+        out.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"},"+
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"TotalRevenue\"}" +
+        "]}," +
+        "\"payload\":{\"id\":\""+k+"\",\"TotalRevenue\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ8", Produced.with(Serdes.String(), Serdes.String()));
 
         //print the result and the latest results
         out.toStream().foreach((key, value) -> System.out.println(key+" Total Revenue: " + value));
@@ -60,8 +66,14 @@ public class All8_9_10 {
                         Materialized.with(Serdes.String(), Serdes.Double())
                 );
 
-        out1.toStream().to("req9", Produced.with(Serdes.String(), Serdes.Double()));
+        //out1.toStream().to("req9", Produced.with(Serdes.String(), Serdes.Double()));
 
+        out1.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"},"+
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"TotalExpenses\"}" +
+        "]}," +
+        "\"payload\":{\"id\":\""+k+"\",\"TotalExpenses\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ9", Produced.with(Serdes.String(), Serdes.String()));
         //print the result
         out1.toStream().foreach((key, value) -> System.out.println(key + " Total Expenses: " + value));
 
@@ -72,6 +84,15 @@ public class All8_9_10 {
 
 
         profitPerSock.toStream().to("req10", Produced.with(Serdes.String(), Serdes.Double()));
+        
+        profitPerSock.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"},"+
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"TotalProfit\"}" +
+        "]}," +
+        "\"payload\":{\"id\":\""+k+"\",\"TotalProfit\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ10", Produced.with(Serdes.String(), Serdes.String()));
+        
+        
         profitPerSock.toStream().foreach((key, value) -> System.out.println(key + " Profit: " + value));
 
 

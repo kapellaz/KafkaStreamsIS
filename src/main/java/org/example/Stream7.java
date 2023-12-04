@@ -46,7 +46,13 @@ public class Stream7 {
 
         KTable<String, Double> out2 = out.mapValues(AggregateSale::Average);
 
-        out2.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
+        //out2.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
+        out2.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"},"+
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"AverageBySock\"}" +
+        "]}," +
+        "\"payload\":{\"id\":\""+k+"\",\"AverageBySock\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ11", Produced.with(Serdes.String(), Serdes.String()));
 
         //print the result
         out2.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Average: " + value));

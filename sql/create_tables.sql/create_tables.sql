@@ -1,13 +1,13 @@
 CREATE TABLE SockSuppliers (
     SupplierID SERIAL PRIMARY KEY,
-    SupplierName VARCHAR(255) NOT NULL,
+    SupplierName VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Socks (
     SockID SERIAL PRIMARY KEY,
     SockType VARCHAR(255) NOT NULL,
     SockPrice DECIMAL(10, 2) NOT NULL,
-    SockSupplierID INTEGER REFERENCES SockSuppliers(SupplierID),
+    SockSupplierID INTEGER REFERENCES SockSuppliers(SupplierID)
 );
 
 CREATE TABLE Purchases (

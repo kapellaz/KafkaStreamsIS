@@ -42,8 +42,13 @@ public class All5_6_7 {
                         Materialized.with(Serdes.Integer(), Serdes.Double())
                 );
 
-        out.toStream().to("req5", Produced.with(Serdes.Integer(), Serdes.Double()));
-        //print the result and the latest results
+        out.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"int32\",\"optional\":false,\"field\":\"id\"}," +
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"revenue\"}" +
+        "]}," +
+        "\"payload\":{\"id\":"+k+",\"revenue\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ5", Produced.with(Serdes.Integer(), Serdes.String()));
+
         out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Revenue: " + value));
 
         
@@ -60,24 +65,29 @@ public class All5_6_7 {
         //out1.toStream().to("req6", Produced.with(Serdes.Integer(), Serdes.Double()));
         out1.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
         "[{\"type\":\"int32\",\"optional\":false,\"field\":\"id\"}," +
-        "{\"type\":\"int32\",\"optional\":false,\"field\":\"revenue\"}" +
-        "],\"optional\":false}," +
-        "\"payload\":{\"id\":"+k+",\"Expenses\":"+v+"}}";System.out.println(a); return a;}).
-        toStream().to("testout", Produced.with(Serdes.Integer(), Serdes.String()));
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"expenses\"}" +
+        "]}," +
+        "\"payload\":{\"id\":"+k+",\"expenses\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ6", Produced.with(Serdes.Integer(), Serdes.String()));
 
         out1.toStream().foreach((key, value) -> System.out.println("Sell: " + key + " expenses: " + value));
-
-        //req7 get profit per sock
+       //req7 get profit per sock
         // Calculate profit per sock by joining revenue and expenses
         KTable<Integer, Double> profitPerSock = out
                 .join(out1, (revenueValue, expenseValue) -> revenueValue - expenseValue);
 
 
-        profitPerSock.toStream().to("req7", Produced.with(Serdes.Integer(), Serdes.Double()));
+        profitPerSock.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"int32\",\"optional\":false,\"field\":\"id\"}," +
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"profit\"}" +
+        "]}," +
+        "\"payload\":{\"id\":"+k+",\"profit\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ7", Produced.with(Serdes.Integer(), Serdes.String()));
         profitPerSock.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Profit: " + value));
 
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
+        System.out.println("a ler");
         streams.start();
 
     }

@@ -30,7 +30,7 @@ public class Stream8 {
                 Serdes.String(),
                 new CustomSaleSerializer()
         ));
-        //Get the average amount spent in each purchase (separated by sock type)
+        //Get the average amount spent in each purchase (aggregated for all socks).
         KTable<String, AggregateSale> out = lines
                 .groupByKey()
                 .aggregate(
@@ -46,7 +46,13 @@ public class Stream8 {
 
         KTable<String, Double> out2 = out.mapValues(AggregateSale::Average);
 
-        out2.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
+        //out2.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
+        out2.mapValues((k,v)->{String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"},"+
+        "{\"type\":\"double\",\"optional\":false,\"field\":\"AverageSpent\"}" +
+        "]}," +
+        "\"payload\":{\"id\":\"Average\",\"AverageSpent\":"+v+"}}";System.out.println(a); return a;}).
+        toStream().to("REQ12", Produced.with(Serdes.String(), Serdes.String()));
 
         //print the result
         out2.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Average: " + value));

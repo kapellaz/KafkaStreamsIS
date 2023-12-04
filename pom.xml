@@ -60,7 +60,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>

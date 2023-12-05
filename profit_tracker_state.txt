@@ -1,0 +1,6 @@
+SupplierWithHighestProfit:Supplier7
+HighestProfit:-160.0
+CurrentValue:Supplier1:-1100.0
+CurrentValue:Supplier5:-2200.0
+CurrentValue:Supplier7:-160.0
+CurrentValue:Supplier6:-180.0

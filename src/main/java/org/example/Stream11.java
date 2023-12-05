@@ -5,8 +5,10 @@ import org.apache.log4j.BasicConfigurator;
 import java.util.Properties;
 import java.time.Duration;
 
+import org.apache.kafka.streams.kstream.Suppressed.BufferConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 
@@ -32,7 +34,8 @@ public class Stream11 {
 
                 lines.foreach((key, value) -> System.out.println("key: " + key + " Value: " + value));
 
-                // Get the total revenue in the last hour using a tumbling time window.
+                // Agrupa os eventos por chave e calcula a soma do campo pricePerPair * quantity
+                // Agrupa os eventos por chave e calcula a soma do campo pricePerPair * quantity
 
                 KTable<Windowed<String>, Double> out = lines
                                 .groupBy((key, value) -> value.getType())
@@ -43,8 +46,9 @@ public class Stream11 {
                                                                 + (newValue.getPricePerPair() * newValue.getQuantity()),
                                                 Materialized.with(Serdes.String(), Serdes.Double()))
                                 .toStream()
-                                .groupByKey() // Remova os parâmetros de tipo aqui
-                                .reduce((aggValue, newValue) -> aggValue + newValue);
+                                .groupByKey()
+                                .reduce((aggValue, newValue) -> aggValue);
+
                 out.toStream().foreach(
                                 (key, value) -> System.out.println("Sock: " + key.key() + " Total Revenue: " + value));
 

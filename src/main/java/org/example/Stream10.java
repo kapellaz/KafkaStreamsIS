@@ -1,11 +1,13 @@
 package org.example;
 
 import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.state.WindowStore;
 import org.apache.log4j.BasicConfigurator;
 import java.util.Properties;
 import java.time.Duration;
 
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -35,18 +37,16 @@ public class Stream10 {
                 // Get the total revenue in the last hour using a tumbling time window.
 
                 KTable<Windowed<String>, Double> out = lines
-                                .groupBy((key, value) -> value.getType())
+                                .groupByKey()
                                 .windowedBy(TimeWindows.of(Duration.ofSeconds(30)))
                                 .aggregate(
                                                 () -> 0.0,
                                                 (aggKey, newValue, aggValue) -> aggValue
                                                                 + (newValue.getPricePerPair() * newValue.getQuantity()),
-                                                Materialized.with(Serdes.String(), Serdes.Double()))
-                                .toStream()
-                                .groupByKey() // Remova os parâmetros de tipo aqui
-                                .reduce((aggValue, newValue) -> aggValue + newValue);
+                                                Materialized.with(Serdes.String(), Serdes.Double()));
+
                 out.toStream().foreach(
-                                (key, value) -> System.out.println("Sock: " + key.key() + " Total Revenue: " + value));
+                                (key, value) -> System.out.println("Sock: " + key.key() + " Total Expenses: " + value));
 
                 out.toStream().to(outtopicname,
                                 Produced.with(WindowedSerdes.timeWindowedSerdeFrom(String.class), Serdes.Double()));

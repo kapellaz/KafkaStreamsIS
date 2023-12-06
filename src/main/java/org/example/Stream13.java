@@ -30,7 +30,7 @@ public class Stream13 {
                 String topicName2 = "Sell";
                 String outtopicname = "req17";
 
-                ProfitTracker prof = new ProfitTracker();
+                ProfitTracker prof = new ProfitTracker("profit_tracker_state.txt");
 
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application13");
@@ -86,15 +86,20 @@ public class Stream13 {
                                                                 .withKeySerde(Serdes.String())
                                                                 .withValueSerde(Serdes.Double()));
 
-                maxProfitTableEachOne.toStream()
-                                .foreach((key, value) -> {
-                                        if (prof.processProfit(key, value)) {
-                                                System.out.println("BEST: " + key + " with profit: " + value);
-                                        } else {
-                                                System.out.println("BEST: " + prof.getSupplierWithHighestProfit()
-                                                                + " with profit: " + prof.getHighestProfit());
-                                        }
-                                });
+                maxProfitTableEachOne.mapValues((k, v) -> {
+                        prof.processProfit(k, v);
+                        String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+                                        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
+                                        "{\"type\":\"double\",\"optional\":false,\"field\":\"NameSupplierWithHighestProfit\"},"
+                                        +
+                                        "{\"type\":\"double\",\"optional\":false,\"field\":\"Profit\"}"
+                                        +
+                                        "]}," +
+                                        "\"payload\":{\"type\":\"" + prof.getSupplierWithHighestProfit()
+                                        + "\",\"HighestProfit\":" + prof.getHighestProfit() + "}}";
+                        System.out.println(a);
+                        return a;
+                }).toStream().to("REQ17", Produced.with(Serdes.String(), Serdes.String()));
 
                 KafkaStreams streams = new KafkaStreams(builder.build(), props);
                 streams.start();

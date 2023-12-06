@@ -83,11 +83,18 @@ public class Stream12 {
                                 out1,
                                 (totalRevenue, totalExpenses) -> totalRevenue - totalExpenses);
 
-                profit.toStream().foreach(
-                                (key, value) -> System.out.println("Sock: " + key.key() + " Profit: " + value));
-
-                profit.toStream().to(outtopicname,
-                                Produced.with(WindowedSerdes.timeWindowedSerdeFrom(String.class), Serdes.Double()));
+                out.mapValues((k, v) -> {
+                        String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+                                        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
+                                        "{\"type\":\"string\",\"optional\":false,\"field\":\"ProfitLast\"}" +
+                                        "]}," +
+                                        "\"payload\":{\"id\":\"LastProfit:\",\"ProfitLast\":\""
+                                        + v +
+                                        "}}";
+                        System.out.println(a);
+                        return a;
+                }).toStream().to("REQ16",
+                                Produced.with(WindowedSerdes.timeWindowedSerdeFrom(String.class), Serdes.String()));
 
                 KafkaStreams streams = new KafkaStreams(builder.build(), props);
                 streams.start();

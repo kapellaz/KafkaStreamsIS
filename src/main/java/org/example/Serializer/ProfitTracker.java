@@ -14,9 +14,10 @@ public class ProfitTracker {
     private String supplierWithHighestProfit = null;
     private double highestProfit = Double.NEGATIVE_INFINITY;
     private Map<String, Double> currentValues = new HashMap<>();
-    private static final String STATE_FILE_PATH = "profit_tracker_state.txt";
+    private static String STATE_FILE_PATH;
 
-    public ProfitTracker() {
+    public ProfitTracker(String file) {
+        STATE_FILE_PATH = file;
         // Recupera o estado salvo, incluindo a lista de streams processadas
         loadState();
     }
@@ -37,23 +38,21 @@ public class ProfitTracker {
         this.highestProfit = highestProfit;
     }
 
-    public void verifica() {
-
+    public boolean verifica() {
+        int c = 0;
         int cont = 0;
         for (Map.Entry<String, Double> entry : currentValues.entrySet()) {
             if (entry.getValue() > highestProfit) {
                 highestProfit = entry.getValue();
                 supplierWithHighestProfit = entry.getKey();
                 cont++;
-                sendMessage(
-                        "Ver: New highest profit: " + highestProfit + " for supplier: " + supplierWithHighestProfit);
             }
 
         }
         if (cont < 1) {
             String supplierWithMaxValue = null;
             double maxValue = Double.NEGATIVE_INFINITY;
-            int c = 0;
+
             for (Map.Entry<String, Double> entry : currentValues.entrySet()) {
                 if (entry.getValue() > maxValue) {
                     maxValue = entry.getValue();
@@ -65,22 +64,27 @@ public class ProfitTracker {
                 highestProfit = maxValue;
                 supplierWithHighestProfit = supplierWithMaxValue;
 
-                sendMessage(
-                        "Ver: New highest profit: " + highestProfit + " for supplier: " + supplierWithHighestProfit);
             }
         }
+        if (cont > 0 || c > 0) {
+            return true;
+        }
+        return false;
 
     }
 
     public boolean processProfit(String supplier, double profit) {
         currentValues.put(supplier, profit);
-        verifica();
+        if (verifica()) {
+            saveState();
+            return true;
+        }
 
         if (profit > highestProfit) {
             highestProfit = profit;
             supplierWithHighestProfit = supplier;
             sendMessage("New highest profit: " + highestProfit + " for supplier: " + supplierWithHighestProfit);
-
+            saveState();
             return true;
         }
         saveState();

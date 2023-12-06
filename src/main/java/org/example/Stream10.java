@@ -45,11 +45,18 @@ public class Stream10 {
                                                                 + (newValue.getPricePerPair() * newValue.getQuantity()),
                                                 Materialized.with(Serdes.String(), Serdes.Double()));
 
-                out.toStream().foreach(
-                                (key, value) -> System.out.println("Sock: " + key.key() + " Total Expenses: " + value));
-
-                out.toStream().to(outtopicname,
-                                Produced.with(WindowedSerdes.timeWindowedSerdeFrom(String.class), Serdes.Double()));
+                out.mapValues((k, v) -> {
+                        String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
+                                        "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
+                                        "{\"type\":\"string\",\"optional\":false,\"field\":\"RevenueLast\"}" +
+                                        "]}," +
+                                        "\"payload\":{\"id\":\"LastRevenue:\",\"RevenueLast\":\""
+                                        + v +
+                                        "}}";
+                        System.out.println(a);
+                        return a;
+                }).toStream().to("REQ14",
+                                Produced.with(WindowedSerdes.timeWindowedSerdeFrom(String.class), Serdes.String()));
 
                 KafkaStreams streams = new KafkaStreams(builder.build(), props);
                 streams.start();

@@ -5,10 +5,8 @@ import org.apache.log4j.BasicConfigurator;
 import java.util.Properties;
 import java.time.Duration;
 
-import org.apache.kafka.streams.kstream.Suppressed.BufferConfig;
-import org.apache.kafka.streams.state.WindowStore;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
+
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -21,7 +19,6 @@ public class Stream12 {
                 BasicConfigurator.configure();
                 String topicName1 = "Buy";
                 String topicName2 = "Sell";
-                String outtopicname = "req16";
 
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application12");
@@ -58,9 +55,6 @@ public class Stream12 {
 
                 out.toStream().foreach(
                                 (key, value) -> System.out.println("Sock: " + key.key() + " Total Revenue: " + value));
-
-                out.toStream().to(outtopicname,
-                                Produced.with(WindowedSerdes.timeWindowedSerdeFrom(String.class), Serdes.Double()));
 
                 // Get the total expenses in the last 30 seconds using a tumbling time window.
                 KTable<Windowed<String>, Double> out1 = lines2

@@ -1,8 +1,7 @@
 package org.example;
 
-import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.kstream.*;
-import org.apache.kafka.streams.state.KeyValueStore;
+
 import org.apache.log4j.BasicConfigurator;
 import java.util.Properties;
 

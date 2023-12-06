@@ -17,7 +17,6 @@ public class Stream7 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
         String topicName = "Buy";
-        String outtopicname = "req11";
 
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application1000001");

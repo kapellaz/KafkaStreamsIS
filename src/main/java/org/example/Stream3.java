@@ -15,7 +15,6 @@ public class Stream3 {
         public static void main(String[] args) {
                 BasicConfigurator.configure();
                 String topicName = "Buy";
-                String outtopicname = "req7";
 
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application3");
@@ -37,11 +36,8 @@ public class Stream3 {
                                                                                 * (0.5) * newValue.getQuantity()),
                                                 Materialized.with(Serdes.Integer(), Serdes.Double()));
 
-                out.toStream().to(outtopicname, Produced.with(Serdes.Integer(), Serdes.Double()));
-
                 // print the result
-                // out.toStream().foreach((key, value) -> System.out.println("Buy: " + key +
-                // "Profit: " + value));
+                out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + "Profit: " + value));
                 out.mapValues((k, v) -> {
 
                         String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +

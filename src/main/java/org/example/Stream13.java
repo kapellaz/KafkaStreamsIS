@@ -3,15 +3,11 @@ package org.example;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.log4j.BasicConfigurator;
 import java.util.Properties;
-import java.time.Duration;
-import org.apache.kafka.streams.KeyValue;
 
-import org.apache.kafka.streams.kstream.Suppressed.BufferConfig;
 import org.apache.kafka.streams.state.KeyValueStore;
-import org.apache.kafka.streams.state.WindowStore;
-import org.apache.kafka.common.metrics.stats.Max;
+
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
+
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -28,7 +24,6 @@ public class Stream13 {
                 BasicConfigurator.configure();
                 String topicName1 = "Buy";
                 String topicName2 = "Sell";
-                String outtopicname = "req17";
 
                 ProfitTracker prof = new ProfitTracker("profit_tracker_state.txt");
 

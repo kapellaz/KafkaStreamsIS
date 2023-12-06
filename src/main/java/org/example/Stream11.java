@@ -5,10 +5,9 @@ import org.apache.log4j.BasicConfigurator;
 import java.util.Properties;
 import java.time.Duration;
 
-import org.apache.kafka.streams.kstream.Suppressed.BufferConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.KeyValue;
+
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 
@@ -19,7 +18,6 @@ public class Stream11 {
         public static void main(String[] args) {
                 BasicConfigurator.configure();
                 String topicName = "Sell";
-                String outtopicname = "req15";
 
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application11");

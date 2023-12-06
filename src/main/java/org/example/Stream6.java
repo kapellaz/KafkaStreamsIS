@@ -15,7 +15,6 @@ public class Stream6 {
         public static void main(String[] args) {
                 BasicConfigurator.configure();
                 String topicName = "Buy";
-                String outtopicname = "req10";
 
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application6");
@@ -51,7 +50,7 @@ public class Stream6 {
                         return a;
                 }).toStream().to("REQ10", Produced.with(Serdes.String(), Serdes.String()));
 
-                out.toStream().to(outtopicname, Produced.with(Serdes.String(), Serdes.Double()));
+               
 
                 // print the result
                 out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + "Profit: " + value));

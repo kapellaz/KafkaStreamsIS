@@ -17,7 +17,6 @@ public class All8_9_10 {
                 BasicConfigurator.configure();
                 String topicName1 = "Buy";
                 String topicName2 = "Sell";
-                String outtopicname = "req8";
 
                 java.util.Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application4");
@@ -41,7 +40,6 @@ public class All8_9_10 {
                                                                 + (newValue.getPricePerPair() * newValue.getQuantity()),
                                                 Materialized.with(Serdes.String(), Serdes.Double()));
 
-                // out.toStream().to("req8", Produced.with(Serdes.String(), Serdes.Double()));
                 out.mapValues((k, v) -> {
                         String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
                                         "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
@@ -64,8 +62,6 @@ public class All8_9_10 {
                                                 (aggKey, newValue, aggValue) -> aggValue
                                                                 + (newValue.getPricePerPair() * newValue.getQuantity()),
                                                 Materialized.with(Serdes.String(), Serdes.Double()));
-
-                // out1.toStream().to("req9", Produced.with(Serdes.String(), Serdes.Double()));
 
                 out1.mapValues((k, v) -> {
                         String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
@@ -99,7 +95,7 @@ public class All8_9_10 {
                 KafkaStreams streams = new KafkaStreams(builder.build(), props);
                 streams.start();
 
-                System.out.println("Reading stream from topic ");
+                System.out.println("Reading stream from topic " + topicName1 + " and " + topicName2);
 
         }
 }

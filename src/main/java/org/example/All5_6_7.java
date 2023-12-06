@@ -62,7 +62,6 @@ public class All5_6_7 {
                                                                 + (newValue.getPricePerPair() * newValue.getQuantity()),
                                                 Materialized.with(Serdes.String(), Serdes.Double()));
 
-                // out1.toStream().to("req6", Produced.with(Serdes.Integer(), Serdes.Double()));
                 out1.mapValues((k, v) -> {
                         String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
                                         "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
@@ -92,7 +91,7 @@ public class All5_6_7 {
                                 .foreach((key, value) -> System.out.println("Buy: " + key + " Profit: " + value));
 
                 KafkaStreams streams = new KafkaStreams(builder.build(), props);
-                System.out.println("a ler");
+                System.out.println("Reading from topic " + topicName1 + " and " + topicName2);
                 streams.start();
 
         }

@@ -17,7 +17,6 @@ public class Stream8 {
     public static void main(String[] args) {
         BasicConfigurator.configure();
         String topicName = "Buy";
-        String outtopicname = "req12";
 
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application8");
@@ -44,8 +43,6 @@ public class Stream8 {
 
         KTable<String, Double> out2 = out.mapValues(AggregateSale::Average);
 
-        // out2.toStream().to(outtopicname, Produced.with(Serdes.String(),
-        // Serdes.Double()));
         out2.mapValues((k, v) -> {
             String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
                     "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +

@@ -15,7 +15,6 @@ public class Stream1 {
         public static void main(String[] args) {
                 BasicConfigurator.configure();
                 String topicName = "Buy";
-                String outtopicname = "req5";
 
                 java.util.Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application1");
@@ -36,7 +35,6 @@ public class Stream1 {
                                                                 + (newValue.getPricePerPair() * newValue.getQuantity()),
                                                 Materialized.with(Serdes.Integer(), Serdes.Double()));
 
-                out.toStream().to(outtopicname, Produced.with(Serdes.Integer(), Serdes.Double()));
                 // print the result and the latest results
                 out.toStream().foreach((key, value) -> System.out.println("Buy: " + key + " Revenue: " + value));
                 out.mapValues((k, v) -> {

@@ -34,7 +34,7 @@ public class KafkaConsumerDB {
         BasicConfigurator.configure();
         String topicName = "dbToTopic";
         Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "testapp61");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "testapp62");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
@@ -127,7 +127,7 @@ public class KafkaConsumerDB {
                     Sale_Operation v = entry.getValue();
                     String a = "{\"type\""+":"+"\""+v.getType()+"\""+","+"\"pricePerPair\""+":"+v.getPricePerPair()+","+"\"quantity\""+":"+v.getQuantity()+",\"supplierIdentifier\""+":"+"\""+v.getSupplierIdentifier()+"\"}";
                     System.out.println(a);
-                    producer.send(new ProducerRecord<String,String>("buyteste1",v.getOperation(),a));
+                    producer.send(new ProducerRecord<String,String>(v.getOperation(),v.getOperation(),a));
                 }
                 topicHash.clear();
                 producer.close();

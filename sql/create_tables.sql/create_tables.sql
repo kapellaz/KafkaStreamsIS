@@ -42,6 +42,24 @@ INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Q
 
 
 
+
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (1, 'Buy', 'Invisible', 5, 1, 10);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (2, 'Buy', 'Low Cut', 10, 1,15);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (3, 'Sell', 'Over the Calf', 15, 1, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (4, 'Sell', 'Invisible', 10, 2, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (5, 'Sell', 'Low Cut', 15, 2, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (6, 'Sell', 'Over the Calf', 5, 2, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (7, 'Sell', 'Invisible', 15, 3, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (8, 'Sell', 'Low Cut', 5, 3, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (9, 'Sell', 'Over the Calf', 10, 3, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (10, 'Sell', 'Invisible', 15, 4, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (11, 'Sell', 'Low Cut', 10, 4, 50);
+INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID, Quantity) VALUES (12, 'Sell', 'Over the Calf', 5, 4, 50);
+
+
+
+
+
 INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID) VALUES (1, 'Buy', 'Invisible', 10, 1);
 INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID) VALUES (1, 'Buy', 'Invisible', 10, 1);
 INSERT into Socks (SockTypeID, Operation, SockType, SockPrice, SockSupplierID) VALUES (1, 'Buy', 'Invisible', 10, 1);

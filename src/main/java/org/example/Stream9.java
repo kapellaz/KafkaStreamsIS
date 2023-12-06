@@ -23,7 +23,7 @@ public class Stream9 {
                 ProfitTracker prof = new ProfitTracker("Stream9Profit.txt");
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application9");
-                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
+                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092,broker2:9092,broker3:9092");
                 props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
                 props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
 
@@ -73,10 +73,13 @@ public class Stream9 {
                         prof.processProfit(k, v);
                         String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
                                         "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
-                                        "{\"type\":\"double\",\"optional\":false,\"field\":\"SockTypeHighestProfit\"}" +
-                                        "]}," +
-                                        "\"payload\":{\"type\":\"" + prof.getSupplierWithHighestProfit()
-                                        + "}}";
+                                        "{\"type\":\"string\",\"optional\":false,\"field\":\"SockTypeHighestProfit\"}"
+                                        +
+                                        "]},"
+                                        +
+                                        "\"payload\":{\"id\":" + "\"" + "SockType" + "\""
+                                        + ",\"SockTypeHighestProfit\":" + "\"" + prof.getSupplierWithHighestProfit()
+                                        + "\"" + "}}";
                         System.out.println(a);
                         return a;
                 }).toStream().to("REQ13", Produced.with(Serdes.String(), Serdes.String()));

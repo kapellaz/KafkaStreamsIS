@@ -19,7 +19,7 @@ public class Stream4 {
 
                 java.util.Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application4");
-                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
+                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092,broker2:9092,broker3:9092");
                 props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
                 props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
 

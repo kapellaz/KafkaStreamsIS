@@ -11,6 +11,21 @@ kafka-console-producer.sh --broker-list broker1:9092 --topic Buy --property "par
 
 kafka-console-producer.sh --broker-list broker1:9092 --topic Sell --property "parse.key=true" --property "key.separator=:"
 
+kafka-topics.sh --bootstrap-server broker1:9092, broker2:9092, broker3:9092 --create --topic REQ5
+kafka-topics.sh --create --topic Buy --bootstrap-server broker1:9092
+kafka-topics.sh --create --topic Sell --bootstrap-server broker1:9092
+
+
+kafka-topics.sh --bootstrap-server broker1:9092 --delete --topic REQ5
+
+kafka-topics.sh --bootstrap-server broker1:9092 --create --topic REQ17
+
+
+
+kafka-topics.sh --bootstrap-server broker2:9092 --create --topic REQ17
+
+
+
 
 Buy:{"id":8,"type":"abcd","pricePerPair":20.0,"quantity":2,"supplierIdentifier":"Supplier1"}
 
@@ -19,6 +34,6 @@ Buy:{"id":8,"type":"abcd","pricePerPair":20.0,"quantity":2,"supplierIdentifier":
 
 
 
-Sell:{"id":7,"type":"abc","pricePerPair":20.0,"quantity":2,"supplierIdentifier":"Supplier1"}
+Sell:{"id":7,"type":"abc","pricePerPair":100.0,"quantity":2,"supplierIdentifier":"Supplier1"}
 
-Buy:{"id":8,"type":"abc","pricePerPair":20.0,"quantity":2,"supplierIdentifier":"Supplier1"}
+Sell:{"id":8,"type":"abc","pricePerPair":200.0,"quantity":1,"supplierIdentifier":"Supplier2"}

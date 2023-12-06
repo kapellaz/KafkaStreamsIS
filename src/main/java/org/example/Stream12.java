@@ -25,7 +25,7 @@ public class Stream12 {
 
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application12");
-                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
+                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092,broker2:9092,broker3:9092");
                 props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
                 props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
 
@@ -83,14 +83,15 @@ public class Stream12 {
                                 out1,
                                 (totalRevenue, totalExpenses) -> totalRevenue - totalExpenses);
 
-                out.mapValues((k, v) -> {
+                profit.mapValues((k, v) -> {
                         String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
                                         "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
-                                        "{\"type\":\"string\",\"optional\":false,\"field\":\"ProfitLast\"}" +
-                                        "]}," +
-                                        "\"payload\":{\"id\":\"LastProfit:\",\"ProfitLast\":\""
-                                        + v +
-                                        "}}";
+                                        "{\"type\":\"double\",\"optional\":false,\"field\":\"LastProfit\"}"
+                                        +
+                                        "]},"
+                                        +
+                                        "\"payload\":{\"id\":" + "\"" + "Profit" + "\""
+                                        + ",\"LastProfit\":" + v + "}}";
                         System.out.println(a);
                         return a;
                 }).toStream().to("REQ16",

@@ -34,7 +34,7 @@ public class Stream13 {
 
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application13");
-                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
+                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092,broker2:9092,broker3:9092");
                 props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
                 props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
 
@@ -90,12 +90,15 @@ public class Stream13 {
                         prof.processProfit(k, v);
                         String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
                                         "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
-                                        "{\"type\":\"double\",\"optional\":false,\"field\":\"NameSupplierWithHighestProfit\"},"
+                                        "{\"type\":\"string\",\"optional\":false,\"field\":\"NameSupplierWithHighestProfit\"},"
                                         +
-                                        "{\"type\":\"double\",\"optional\":false,\"field\":\"Profit\"}"
+                                        "{\"type\":\"double\",\"optional\":false,\"field\":\"HighestProfit\"}"
                                         +
-                                        "]}," +
-                                        "\"payload\":{\"type\":\"" + prof.getSupplierWithHighestProfit()
+                                        "]},"
+                                        +
+                                        "\"payload\":{\"id\":" + "\"" + "Sup" + "\""
+                                        + ",\"NameSupplierWithHighestProfit\":" + "\""
+                                        + prof.getSupplierWithHighestProfit()
                                         + "\",\"HighestProfit\":" + prof.getHighestProfit() + "}}";
                         System.out.println(a);
                         return a;

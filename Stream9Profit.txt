@@ -1,4 +1,5 @@
-SupplierWithHighestProfit:asdad
-HighestProfit:-320.0
+SupplierWithHighestProfit:abcd
+HighestProfit:240.0
+CurrentValue:abc:120.0
 CurrentValue:asdad:-320.0
-CurrentValue:abcd:-520.0
+CurrentValue:abcd:240.0

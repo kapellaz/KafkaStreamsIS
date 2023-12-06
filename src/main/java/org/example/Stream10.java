@@ -19,11 +19,10 @@ public class Stream10 {
         public static void main(String[] args) {
                 BasicConfigurator.configure();
                 String topicName = "Buy";
-                String outtopicname = "req14";
 
                 Properties props = new Properties();
                 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application10");
-                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092");
+                props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092,broker2:9092,broker3:9092");
                 props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
                 props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CustomSaleSerializer.class);
 
@@ -48,11 +47,12 @@ public class Stream10 {
                 out.mapValues((k, v) -> {
                         String a = "{\"schema\":{\"type\":\"struct\",\"fields\":" +
                                         "[{\"type\":\"string\",\"optional\":false,\"field\":\"id\"}," +
-                                        "{\"type\":\"string\",\"optional\":false,\"field\":\"RevenueLast\"}" +
-                                        "]}," +
-                                        "\"payload\":{\"id\":\"LastRevenue:\",\"RevenueLast\":\""
-                                        + v +
-                                        "}}";
+                                        "{\"type\":\"double\",\"optional\":false,\"field\":\"LastRevenues\"}"
+                                        +
+                                        "]},"
+                                        +
+                                        "\"payload\":{\"id\":" + "\"" + "Rev" + "\""
+                                        + ",\"LastRevenues\":" + v + "}}";
                         System.out.println(a);
                         return a;
                 }).toStream().to("REQ14",
